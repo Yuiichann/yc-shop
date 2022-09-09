@@ -1,7 +1,8 @@
-import { Stack, Box } from '@mui/material';
+import { Box, PaletteMode, Stack, ThemeProvider } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import Head from 'next/head';
-import { ThemeProvider } from '@mui/material';
-import { lightTheme, darkTheme } from '../theme';
+import { useCallback, useEffect, useState } from 'react';
+import { darkTheme, lightTheme } from '../theme';
 import Footer from './Footer';
 import Header from './Header';
 
@@ -10,9 +11,35 @@ interface Props {
   title?: string;
 }
 
+const StyledMain = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'light' ? '#ffffff' : '#333333',
+  color: 'white',
+}));
+
 const Layout = ({ children, title }: Props) => {
+  // theme State
+  const [themeMode, setThemeMode] = useState<PaletteMode>('light');
+
+  // handle Click change mode theme
+  const handleChangeThemeMode = useCallback(() => {
+    setThemeMode((prev) => {
+      const theme = prev === 'light' ? 'dark' : 'light';
+      localStorage.setItem('__theme', theme);
+      return theme;
+    });
+  }, []);
+
+  // handle check theme in local storgae
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const theme: PaletteMode = (localStorage.getItem('__theme') as PaletteMode) ?? 'light';
+
+      setThemeMode(theme);
+    }
+  }, []);
+
   return (
-    <ThemeProvider theme={lightTheme}>
+    <ThemeProvider theme={themeMode === 'light' ? lightTheme : darkTheme}>
       <Head>
         <title>{title ? `${title} - YC Shop` : 'YC Shop'}</title>
         <meta name="description" content="YC SHOPPPPP" />
@@ -20,16 +47,16 @@ const Layout = ({ children, title }: Props) => {
 
       <Stack direction="column" height="100vh" justifyContent="space-between">
         <Box>
-          <Header />
+          <Header themeMode={themeMode} handleChangeThemeMode={handleChangeThemeMode} />
         </Box>
 
-        <Box component="main" flexGrow={1} marginTop={12}>
+        <StyledMain component="main" flexGrow={1} paddingY={4} marginTop="64px">
           {children}
-        </Box>
+        </StyledMain>
 
-        <Box>
+        <StyledMain>
           <Footer />
-        </Box>
+        </StyledMain>
       </Stack>
     </ThemeProvider>
   );

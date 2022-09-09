@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
-import { Box, Stack, AppBar, Toolbar, IconButton, Typography, Menu, MenuItem } from '@mui/material';
-import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
-import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
 import DarkModeRoundedIcon from '@mui/icons-material/DarkModeRounded';
+import LightModeRoundedIcon from '@mui/icons-material/LightModeRounded';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
+import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import { AppBar, Button, IconButton, Stack, TextField, Toolbar, Typography } from '@mui/material';
 import Link from 'next/link';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import MenuToggle from './MenuToggle';
+import { ThemeState } from '../types';
+import MenuRightMobile from './MenuRightMobile';
+
+interface Props extends ThemeState {}
 
 const StyledLink = styled(Link)`
   display: block;
@@ -15,38 +20,119 @@ const StyledLink = styled(Link)`
   padding: 20px;
 `;
 
-const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+const Header = ({ themeMode, handleChangeThemeMode }: Props) => {
+  const [isMenuLeftOpen, setIsMenuLeftOpen] = useState(false);
+  const [isMenuRightOpen, setIsMenuRightOpen] = useState(false);
 
+  // handle open or close menu right (only mobile)
+  const handleToggleMenuRight = () => {
+    setIsMenuRightOpen((prev) => !prev);
+  };
+
+  // handle open or close menu left
   const handleToggleMenu = () => {
-    setIsMenuOpen((prev) => !prev);
+    setIsMenuLeftOpen((prev) => !prev);
   };
 
   return (
     <>
+      {/* menu */}
       <AppBar>
-        <Toolbar>
-          <Stack direction="row" gap={1} alignItems="center">
-            {/* Icon Menu */}
-            <IconButton onClick={handleToggleMenu}>
-              <MenuOutlinedIcon />
+        <Toolbar sx={{ height: '64px' }}>
+          <Stack
+            width="100%"
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            gap={2}
+          >
+            <Stack direction="row" gap={1} alignItems="center">
+              {/* Icon Menu */}
+              <IconButton onClick={handleToggleMenu}>
+                <MenuOutlinedIcon />
+              </IconButton>
+
+              {/* LOGO */}
+              <Typography
+                variant="h6"
+                fontWeight={600}
+                letterSpacing={2}
+                sx={{ '&:hover': { opacity: 0.8 } }}
+              >
+                <Link href="/">YC Shop</Link>
+              </Typography>
+            </Stack>
+
+            {/* Search Input */}
+            <TextField
+              type="search"
+              label="Search..."
+              color="secondary"
+              size="small"
+              autoComplete="true"
+              sx={{
+                width: '40%',
+                maxWidth: '350px',
+                display: {
+                  xs: 'none',
+                  md: 'flex',
+                },
+              }}
+              InputProps={{ endAdornment: <SearchOutlinedIcon /> }}
+            ></TextField>
+
+            <Stack
+              direction="row"
+              gap={1}
+              sx={{
+                display: {
+                  xs: 'none',
+                  md: 'flex',
+                },
+              }}
+            >
+              <Link href="/cart">
+                <Button color="secondary" startIcon={<ShoppingCartOutlinedIcon />}>
+                  Cart
+                </Button>
+              </Link>
+              <Link href="/login">
+                <Button color="secondary" startIcon={<LogoutOutlinedIcon />}>
+                  Login
+                </Button>
+              </Link>
+
+              <IconButton onClick={handleChangeThemeMode}>
+                {themeMode === 'light' ? <LightModeRoundedIcon /> : <DarkModeRoundedIcon />}
+              </IconButton>
+            </Stack>
+
+            {/* Icon Menu on Mobile */}
+            <IconButton
+              sx={{
+                display: {
+                  xs: 'flex',
+                  md: 'none',
+                },
+              }}
+              onClick={handleToggleMenuRight}
+            >
+              <MoreVertOutlinedIcon />
             </IconButton>
 
-            {/* LOGO */}
-            <Typography
-              variant="h6"
-              fontWeight={600}
-              letterSpacing={2}
-              sx={{ '&:hover': { opacity: 0.8 } }}
-            >
-              <Link href="/">YC Shop</Link>
-            </Typography>
+            {/* Menu Right Mobile */}
+            <MenuRightMobile
+              themeMode={themeMode}
+              handleChangeThemeMode={handleChangeThemeMode}
+              isMenuOpen={isMenuRightOpen}
+              handleToggleMenuRight={handleToggleMenuRight}
+            />
           </Stack>
         </Toolbar>
       </AppBar>
 
       {/* Menu Toggle */}
-      <MenuToggle isMenuOpen={isMenuOpen} setToggleMenu={handleToggleMenu} />
+      {/* <MenuToggle isMenuOpen={isMenuOpen} setToggleMenu={handleToggleMenu} /> */}
     </>
   );
 };

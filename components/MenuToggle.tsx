@@ -69,6 +69,7 @@ const MenuToggle = ({ isMenuOpen, setToggleMenu }: Props) => {
               },
               cursor: 'pointer',
             }}
+            key={item.id}
           >
             <Stack direction="row" justifyContent="center" alignItems="center" gap={1}>
               <CloseOutlinedIcon />
