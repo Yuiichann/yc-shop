@@ -13,12 +13,20 @@ interface Props {
 
 const StyledMain = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'light' ? '#ffffff' : '#333333',
-  color: 'white',
+  color: theme.palette.mode === 'light' ? 'dark' : 'white',
 }));
 
 const Layout = ({ children, title }: Props) => {
   // theme State
-  const [themeMode, setThemeMode] = useState<PaletteMode>('light');
+  const [themeMode, setThemeMode] = useState<PaletteMode>(() => {
+    let theme: PaletteMode;
+
+    if (typeof window !== 'undefined') {
+      return (localStorage.getItem('__theme') as PaletteMode) || 'light';
+    } else {
+      return 'light';
+    }
+  });
 
   // handle Click change mode theme
   const handleChangeThemeMode = useCallback(() => {
@@ -30,13 +38,13 @@ const Layout = ({ children, title }: Props) => {
   }, []);
 
   // handle check theme in local storgae
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const theme: PaletteMode = (localStorage.getItem('__theme') as PaletteMode) ?? 'light';
+  // useEffect(() => {
+  //   if (typeof window !== 'undefined') {
+  //     const theme: PaletteMode = (localStorage.getItem('__theme') as PaletteMode) ?? 'light';
 
-      setThemeMode(theme);
-    }
-  }, []);
+  //     setThemeMode(theme);
+  //   }
+  // }, []);
 
   return (
     <ThemeProvider theme={themeMode === 'light' ? lightTheme : darkTheme}>

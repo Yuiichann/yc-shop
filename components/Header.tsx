@@ -6,7 +6,7 @@ import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { AppBar, Button, IconButton, Stack, TextField, Toolbar, Typography } from '@mui/material';
-import Link from 'next/link';
+import NextLink from 'next/link';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { ThemeState } from '../types';
@@ -14,7 +14,7 @@ import MenuRightMobile from './MenuRightMobile';
 
 interface Props extends ThemeState {}
 
-const StyledLink = styled(Link)`
+const StyledLink = styled(NextLink)`
   display: block;
   text-align: center;
   padding: 20px;
@@ -59,7 +59,7 @@ const Header = ({ themeMode, handleChangeThemeMode }: Props) => {
                 letterSpacing={2}
                 sx={{ '&:hover': { opacity: 0.8 } }}
               >
-                <Link href="/">YC Shop</Link>
+                <NextLink href="/">YC Shop</NextLink>
               </Typography>
             </Stack>
 
@@ -91,19 +91,20 @@ const Header = ({ themeMode, handleChangeThemeMode }: Props) => {
                 },
               }}
             >
-              <Link href="/cart">
+              <NextLink href="/cart">
                 <Button color="secondary" startIcon={<ShoppingCartOutlinedIcon />}>
                   Cart
                 </Button>
-              </Link>
-              <Link href="/login">
+              </NextLink>
+
+              <NextLink href="/login">
                 <Button color="secondary" startIcon={<LogoutOutlinedIcon />}>
                   Login
                 </Button>
-              </Link>
+              </NextLink>
 
               <IconButton onClick={handleChangeThemeMode}>
-                {themeMode === 'light' ? <LightModeRoundedIcon /> : <DarkModeRoundedIcon />}
+                {themeMode === 'light' ? <DarkModeRoundedIcon /> : <LightModeRoundedIcon />}
               </IconButton>
             </Stack>
 

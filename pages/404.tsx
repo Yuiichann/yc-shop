@@ -1,6 +1,7 @@
 import React from 'react';
 import Layout from '../components/Layout';
 import { Stack, Typography, Button } from '@mui/material';
+import Link from 'next/link';
 
 const Custom404 = () => {
   return (
@@ -26,9 +27,11 @@ const Custom404 = () => {
           </Typography>
         </Stack>
 
-        <Button color="secondary" sx={{ width: '300px', marginTop: '20px' }}>
-          Go Back
-        </Button>
+        <Link href="/">
+          <Button color="secondary" sx={{ width: '300px', marginTop: '20px' }}>
+            Go Back
+          </Button>
+        </Link>
       </Stack>
     </Layout>
   );
